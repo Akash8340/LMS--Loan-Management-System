@@ -8,8 +8,8 @@ const roleMiddleware = (...roles: string[]) => {
         next: NextFunction
     ) => {
 
-        console.log("User Role:", req.user.role);
-        console.log("Allowed Roles:", roles);
+        // console.log("User Role:", req.user.role);
+        // console.log("Allowed Roles:", roles);
 
         if (!req.user) {
             return res.status(401).json({

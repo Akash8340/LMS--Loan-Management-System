@@ -9,6 +9,8 @@ import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import loanRoutes from "./routes/loanRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
+import {seedUsers} from "./seed/seedUsers";
+import adminRoutes from "./routes/adminRoutes";
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use(cors({
 app.use(express.json());
 
 connectDB();
+seedUsers();
+
 
 // FIX: ensure uploads/ directory exists at startup so multer doesn't crash
 const uploadsDir = path.join(__dirname, "../uploads");
@@ -46,6 +50,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/apply", authMiddleware, applyLoan);
 router.get("/my-loans", authMiddleware, getMyLoans);
 router.get("/applied", authMiddleware, roleMiddleware("SANCTION", "ADMIN"), getAppliedLoans);
-router.get("/sanctioned", authMiddleware, roleMiddleware("SANCTION", "ADMIN"), getSanctionedLoans);
+router.get("/sanctioned", authMiddleware, roleMiddleware("SANCTION", "DISBURSEMENT", "ADMIN"), getSanctionedLoans);
 
 // FIX: /disbursed MUST come before /:id — otherwise Express matches "disbursed" as :id
 router.get("/disbursed", authMiddleware, roleMiddleware("COLLECTION", "ADMIN"), getDisbursedLoans);
