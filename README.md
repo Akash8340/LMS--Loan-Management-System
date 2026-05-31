@@ -46,7 +46,7 @@ A full-stack loan management platform built with **Next.js 16**, **Express 5**, 
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -59,7 +59,7 @@ A full-stack loan management platform built with **Next.js 16**, **Express 5**, 
 
 ---
 
-## 🏗 Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────────────────┐        ┌──────────────────────────────────┐
@@ -87,7 +87,7 @@ A full-stack loan management platform built with **Next.js 16**, **Express 5**, 
 
 ---
 
-## 👥 Roles & Permissions
+## Roles & Permissions
 
 | Role | Default Email | Access |
 |---|---|---|
@@ -101,7 +101,7 @@ A full-stack loan management platform built with **Next.js 16**, **Express 5**, 
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 LMS/
@@ -164,7 +164,7 @@ LMS/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -204,7 +204,7 @@ npm run dev
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 ### Backend — `backend-fixed/.env`
 
@@ -231,7 +231,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
 
 ---
 
-## 🌱 Seeding Default Users
+## Seeding Default Users
 
 The seed script creates one user for each operational role so you can test immediately without manual setup.
 
@@ -253,7 +253,7 @@ npx ts-node src/seed/seedUsers.ts
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 All protected routes require the header:
 ```
@@ -354,7 +354,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 🖥 Frontend Pages
+## Frontend Pages
 
 | Route | Role | Description |
 |---|---|---|
@@ -372,7 +372,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 🔗 Frontend ↔ Backend Integration Map
+## Frontend ↔ Backend Integration Map
 
 | Frontend Page | API Call | Backend Route |
 |---|---|---|
@@ -391,7 +391,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 🔌 Backend Routes Ready to Integrate
+## Backend Routes Ready to Integrate
 
 The following backend routes are fully built and tested but not yet wired to the frontend. They are ready to integrate at any time:
 
@@ -443,7 +443,7 @@ await api.post(`/loans/${loanId}/upload-slip`, formData, {
 
 ---
 
-## 🔄 Loan Lifecycle
+## Loan Lifecycle
 
 ```
                     ┌─────────┐
@@ -476,7 +476,7 @@ await api.post(`/loans/${loanId}/upload-slip`, formData, {
 
 ---
 
-## 📝 Notes
+## Notes
 
 - All registered users default to the `BORROWER` role. Operational roles (`SANCTION`, `DISBURSEMENT`, `COLLECTION`, `ADMIN`) must be assigned via the seed script or directly in the database.
 - The `SALES` role is defined in the schema and seeded but has no dedicated routes or frontend page yet.
