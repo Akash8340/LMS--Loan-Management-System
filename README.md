@@ -4,6 +4,17 @@ A full-stack loan management platform built with **Next.js 16**, **Express 5**, 
 
 ---
 
+## 🔗 Project Links
+
+| Resource | Link |
+| :--- | :--- |
+| **Frontend Repository / Deployment** | [View Frontend](https://lms-loan-management-system.vercel.app/) |
+| **Backend Repository / API Host** | [View Backend](https://lms-loan-management-system-vzba.onrender.com) |
+| **GitHub Repository** | [View Full Repository](https://github.com/Akash8340/LMS--Loan-Management-System) |
+| **Demo Video** | [Watch Project Walkthrough](https://youtu.be/your-video-id) |
+
+---
+
 ## 📋 Table of Contents
 
 - [Features](#features)
