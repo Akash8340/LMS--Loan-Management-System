@@ -5,146 +5,101 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
 
-    const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: ""
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
+  };
 
-    const [loading, setLoading] =
-        useState(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    try {
+      setLoading(true);
 
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+      const res = await api.post("/auth/register", formData);
 
-    };
+      localStorage.setItem("token", res.data.token);
 
-    const handleSubmit = async (
-        e: React.FormEvent
-    ) => {
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-        e.preventDefault();
+      window.dispatchEvent(new Event("storage"));
 
-        try {
+      router.push("/dashboard");
 
-            setLoading(true);
+      alert("Registration Successful");
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Registration Failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            const res = await api.post(
-                "/auth/register",
-                formData
-            );
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-xl p-8 w-[420px] flex flex-col gap-4"
+      >
+        <h1 className="text-2xl font-bold text-center">Register</h1>
 
-            localStorage.setItem(
-                "token",
-                res.data.token
-            );
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
 
-            localStorage.setItem(
-                "user",
-                JSON.stringify(
-                    res.data.user
-                )
-            );
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
 
-            alert(
-                "Registration Successful"
-            );
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
 
-            router.push("/dashboard");
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-black text-white p-2"
+        >
+          {loading ? "Registering..." : "Register"}
+        </button>
 
-        } catch (error: any) {
+        <div className="text-center mt-4">
+          <span>Already have an account?</span>
 
-            alert(
-                error.response?.data?.message ||
-                "Registration Failed"
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
-    return (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
-
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white shadow-lg rounded-xl p-8 w-[420px] flex flex-col gap-4"
-            >
-
-                <h1 className="text-2xl font-bold text-center">
-                    Register
-                </h1>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="border p-2"
-                    required
-                />
-
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border p-2"
-                    required
-                />
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="border p-2"
-                    required
-                />
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-black text-white p-2"
-                >
-                    {
-                        loading
-                        ? "Registering..."
-                        : "Register"
-                    }
-                </button>
-
-                <div className="text-center mt-4">
-                    <span>
-                        Already have an account?
-                    </span>
-
-                    <a
-                        href="/login"
-                        className="text-blue-600 ml-2"
-                    >
-                        Login
-                    </a>
-                </div>
-
-            </form>
-
+          <a href="/login" className="text-blue-600 ml-2">
+            Login
+          </a>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

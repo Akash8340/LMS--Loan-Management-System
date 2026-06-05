@@ -4,128 +4,77 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 
 interface Loan {
-    _id: string;
-    fullName: string;
-    loanAmount: number;
-    status: string;
+  _id: string;
+  fullName: string;
+  loanAmount: number;
+  status: string;
 }
 
 export default function DisbursementPage() {
+  const [loans, setLoans] = useState<Loan[]>([]);
 
-    const [loans, setLoans] = useState<Loan[]>([]);
+  useEffect(() => {
+    fetchLoans();
+  }, []);
 
-    useEffect(() => {
-        fetchLoans();
-    }, []);
+  const fetchLoans = async () => {
+    try {
+      const res = await api.get("/loans/sanctioned");
 
+      console.log("Fetched Loans:", res.data.loans || res.data);
 
-    const fetchLoans = async () => {
-        try {
-            const res =
-                await api.get(
-                    "/loans/sanctioned"
-                );
+      setLoans(res.data.loans || res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-                console.log("Fetched Loans:", res.data.loans || res.data);
+  const disburseLoan = async (loanId: string) => {
+    try {
+      await api.patch(`/loans/${loanId}/disburse`);
 
-            setLoans(
-                res.data.loans || res.data
-            );
+      alert("Loan Disbursed");
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
+      fetchLoans();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const disburseLoan = async (
-        loanId: string
-    ) => {
+  return (
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6">Disbursement Dashboard</h1>
 
-        try {
+      <table className="w-full bg-white shadow rounded">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="p-4">Name</th>
 
-            await api.patch(
-                `/loans/${loanId}/disburse`
-            );
+            <th className="p-4">Amount</th>
 
-            alert("Loan Disbursed");
+            <th className="p-4">Action</th>
+          </tr>
+        </thead>
 
-            fetchLoans();
+        <tbody>
+          {loans.map((loan) => (
+            <tr key={loan._id} className="border-t">
+              <td className="p-4">{loan.fullName}</td>
 
-        } catch (error) {
-            console.log(error);
-        }
+              <td className="p-4">₹{loan.loanAmount}</td>
 
-    };
-
-    return (
-        <div className="p-8">
-
-            <h1 className="text-3xl font-bold mb-6">
-                Disbursement Dashboard
-            </h1>
-
-            <table className="w-full bg-white shadow rounded">
-
-                <thead>
-
-                    <tr className="bg-gray-200">
-
-                        <th className="p-4">
-                            Name
-                        </th>
-
-                        <th className="p-4">
-                            Amount
-                        </th>
-
-                        <th className="p-4">
-                            Action
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {loans.map((loan) => (
-
-                        <tr
-                            key={loan._id}
-                            className="border-t"
-                        >
-
-                            <td className="p-4">
-                                {loan.fullName}
-                            </td>
-
-                            <td className="p-4">
-                                ₹{loan.loanAmount}
-                            </td>
-
-                            <td className="p-4">
-
-                                <button
-                                    onClick={() =>
-                                        disburseLoan(
-                                            loan._id
-                                        )
-                                    }
-                                    className="bg-blue-600 text-white px-4 py-2 rounded"
-                                >
-                                    Disburse
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    ))}
-
-                </tbody>
-
-            </table>
-
-        </div>
-    );
+              <td className="p-4">
+                <button
+                  onClick={() => disburseLoan(loan._id)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Disburse
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }

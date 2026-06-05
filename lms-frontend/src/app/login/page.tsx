@@ -5,136 +5,88 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
 
-    const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [formData, setFormData] =
-        useState({
-            email: "",
-            password: ""
-        });
+  const [loading, setLoading] = useState(false);
 
-    const [loading, setLoading] =
-        useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        setFormData({
-            ...formData,
-            [e.target.name]:
-                e.target.value
-        });
+    try {
+      setLoading(true);
 
-    };
+      const res = await api.post("/auth/login", formData);
 
-    const handleSubmit = async (
-        e: React.FormEvent
-    ) => {
+      localStorage.setItem("token", res.data.token);
 
-        e.preventDefault();
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-        try {
+      window.dispatchEvent(new Event("storage"));
 
-            setLoading(true);
+      router.push("/dashboard");
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            const res =
-                await api.post(
-                    "/auth/login",
-                    formData
-                );
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-xl p-8 w-[420px] flex flex-col gap-4"
+      >
+        <h1 className="text-2xl font-bold text-center">Login</h1>
 
-            localStorage.setItem(
-                "token",
-                res.data.token
-            );
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
 
-            localStorage.setItem(
-                "user",
-                JSON.stringify(
-                    res.data.user
-                )
-            );
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="border p-2"
+          required
+        />
 
-            router.push(
-                "/dashboard"
-            );
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-black text-white p-2"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        } catch (error: any) {
+        <div className="text-center mt-4">
+          <span>Don't have an account?</span>
 
-            alert(
-                error.response?.data?.message ||
-                "Login Failed"
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
-    return (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
-
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white shadow-lg rounded-xl p-8 w-[420px] flex flex-col gap-4"
-            >
-
-                <h1 className="text-2xl font-bold text-center">
-                    Login
-                </h1>
-
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border p-2"
-                    required
-                />
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="border p-2"
-                    required
-                />
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-black text-white p-2"
-                >
-                    {
-                        loading
-                        ? "Logging in..."
-                        : "Login"
-                    }
-                </button>
-
-                <div className="text-center mt-4">
-                <span>
-                    Don't have an account?
-                </span>
-
-                <a
-                    href="/register"
-                    className="text-blue-600 ml-2"
-                >
-                    Register
-                </a>
-            </div>
-
-            </form>
-
+          <a href="/register" className="text-blue-600 ml-2">
+            Register
+          </a>
         </div>
-    );
+      </form>
+    </div>
+  );
 }
